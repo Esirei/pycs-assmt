@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->uuid()->primary();
             $table->string('type');
             $table->string('content');
-            $table->foreignIdFor(Contact::class);
+            $table->foreignIdFor(Contact::class)->constrained('contacts', 'uuid')->cascadeOnDelete();
             $table->timestamps();
         });
     }

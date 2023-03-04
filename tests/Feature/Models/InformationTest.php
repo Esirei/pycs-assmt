@@ -25,4 +25,13 @@ class InformationTest extends TestCase
 
         $this->assertInstanceOf(Contact::class, $information->contact);
     }
+
+    public function testInformationDeletesOnContactDeletion()
+    {
+        $information = Information::factory()->create();
+
+        $information->contact()->delete();
+
+        $this->assertDatabaseCount(Information::class, 0);
+    }
 }
