@@ -16,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('heartbeat', fn() => response()->json(['status' => true, 'version' => '9.20.0']));
