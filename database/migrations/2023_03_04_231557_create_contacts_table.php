@@ -13,7 +13,6 @@ return new class extends Migration {
             $table->string('last_name')->nullable();
             $table->longText('photo')->nullable();
             $table->string('company')->nullable();
-            $table->string('location');
             $table->timestamps();
         });
     }

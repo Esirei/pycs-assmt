@@ -16,7 +16,6 @@ class ContactFactory extends Factory
             'last_name' => $this->faker->lastName(),
             'photo' => $this->faker->imageUrl(),
             'company' => $this->faker->company(),
-            'location' => $this->faker->country(),
         ];
     }
 }

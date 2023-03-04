@@ -18,7 +18,6 @@ class Contact extends Model
         'last_name',
         'company',
         'photo',
-        'location',
     ];
 
     protected static function booted()

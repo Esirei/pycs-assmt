@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enums\InformationType;
 use App\Models\Traits\HasUuidPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,10 @@ class Information extends Model
     protected $fillable = [
         'type',
         'content',
+    ];
+
+    protected $casts = [
+        'type' => InformationType::class,
     ];
 
     public function contact(): BelongsTo
