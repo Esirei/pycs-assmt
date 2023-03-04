@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasUuidPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Contact extends Model
 {
     use HasFactory;
+    use HasUuidPrimaryKey;
 
-    public $incrementing = false;
-    protected $primaryKey = 'uuid';
-    protected $keyType = 'string';
     protected $fillable = [
         'name',
         'last_name',
@@ -27,5 +27,10 @@ class Contact extends Model
         static::creating(function (Contact $contact) {
             $contact->uuid = (string)Str::orderedUuid();
         });
+    }
+
+    public function information(): HasMany
+    {
+        return $this->hasMany(Information::class);
     }
 }
