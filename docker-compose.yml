@@ -1,0 +1,77 @@
+version: '3.9'
+
+volumes:
+  pgsql:
+  redis:
+
+services:
+  cache:
+    image: redis:alpine
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+    networks:
+      - backend
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      timeout: 5s
+
+  db:
+    image: postgres:15.2-alpine
+    environment:
+      PGPASSWORD: '${DB_PASSWORD:-secret}'
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+    restart: unless-stopped
+    volumes:
+      - pgsql:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}" ]
+      retries: 3
+      timeout: 5s
+
+  app:
+    build: .
+    working_dir: /app
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - ./.docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/app.ini
+    depends_on:
+      - db
+      - cache
+    networks:
+      - backend
+
+  webserver:
+    image: nginx:1.23.3-alpine
+    restart: unless-stopped
+    ports:
+      - '9000:80'
+    volumes:
+      - .:/app
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - backend
+
+  worker:
+    build: .
+    working_dir: /app
+    restart: unless-stopped
+    entrypoint: ['/usr/bin/supervisord', '-c',  '/etc/supervisord.conf']
+    volumes:
+      - .:/app
+      - ./.docker/supervisord.conf:/etc/supervisord.conf
+    depends_on:
+      - app
+    networks:
+      - backend
+
+networks:
+  backend:
