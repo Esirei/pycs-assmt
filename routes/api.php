@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('contacts', ContactsController::class);
+Route::apiResource('contacts', ContactsController::class);
 Route::get('reports', ReportsController::class)->name('reports');
