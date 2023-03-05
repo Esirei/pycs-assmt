@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ReportsController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::apiResource('contacts', ContactsController::class);
 Route::get('reports', ReportsController::class)->name('reports');
